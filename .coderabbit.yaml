@@ -1,0 +1,64 @@
+language: en-US
+early_access: false
+enable_free_tier: false
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  in_progress_fortune: false
+  review_status: true
+  collapse_walkthrough: false
+  path_filters:
+    - "!**/vendor/**"
+    - "!vendor/**"
+    - "!**/zz_generated*"
+    - "!boilerplate/**"
+    - "!**/go.sum"
+  auto_review:
+    enabled: true
+    drafts: true
+    ignore_title_keywords:
+      - WIP
+      - "Do Not Merge"
+      - "Update Konflux references"
+  pre_merge_checks:
+    custom_checks:
+      - name: "PR checklist claims vs evidence (generic)"
+        mode: warning
+        instructions: |
+          In the PR body, look for markdown checklist items (`- [ ]` / `- [x]`). The exact
+          checklist is defined by each repository and may change over time; do not assume
+          a fixed list of bullets.
+
+          If the PR body contains no markdown checklist items (`- [ ]` / `- [x]`), pass this
+          check with no findings.
+
+          For every line that is **checked** (`[x]`):
+          - Treat the **text of that line** (after the checkbox) as a specific claim or
+            requirement for this PR.
+          - Decide what kind of claim it is from wording alone (examples of categories, not
+            an exhaustive list): process/workflow, formatting/lint, build/tests, documentation,
+            linkage to trackers, risk/disclosure, manual verification, etc.
+
+          Then, **when it is possible from GitHub-visible context** (PR title, description,
+          links, file list, patch/diff, comments, and any CI status you can see):
+          - Check whether the **evidence supports** the claim or clearly contradicts it.
+          - If the claim is about **running a command** (`make …`, scripts, local hooks):
+            you cannot execute commands; **do not** pass or fail that item based on guessing.
+            Say that **CI or required checks** are the authority unless the diff/description
+            obviously contradicts the spirit of the claim (e.g. egregious fmt issues when the
+            line asserts formatting).
+          - If the claim is **subjective** (“clearly explains”, “manually tested”), use light
+            review: flag only when obviously missing or inconsistent with the change.
+
+          For **unchecked** `[ ]` items: ignore unless your product defaults say otherwise.
+
+          Do not hardcode repository-specific checklist wording in your reasoning; always derive
+          obligations from the **current** checked lines in this PR’s description.
+
+          Summarize per checked item: satisfied / not satisfied / not verifiable from PR, with
+          brief rationale.
+chat:
+  auto_reply: true
+  art: false
